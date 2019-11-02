@@ -10,7 +10,7 @@ import spock.lang.Title
 @Narrative("""
 i want to create events and users and invite users to events so that i have a better recollection who is coming with me
 """)
-@Title("crudding events and users")
+@Title("crudding events")
 @Issue("EVE-001")
 class EventServiceTest extends Specification {
     EventService eventService;

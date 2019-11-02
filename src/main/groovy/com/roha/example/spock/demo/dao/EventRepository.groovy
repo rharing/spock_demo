@@ -1,4 +1,4 @@
-package com.roha.example.spock.demo.service
+package com.roha.example.spock.demo.dao
 
 import com.roha.example.spock.demo.model.Event
 import org.joda.time.DateTime
