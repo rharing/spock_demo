@@ -3,6 +3,7 @@ package com.roha.example.spock.demo.model
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.ManyToMany
 
 @Entity
 class User {
@@ -14,6 +15,8 @@ class User {
     private String password
     private String phone
 
+    @ManyToMany(mappedBy = "invited")
+    Set<Event> invitedfor = new HashSet<>()
     @Override
     public String toString() {
         return "User{" +

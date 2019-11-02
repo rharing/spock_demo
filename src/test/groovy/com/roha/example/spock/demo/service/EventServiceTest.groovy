@@ -1,6 +1,7 @@
 package com.roha.example.spock.demo.service
 
 import com.roha.example.spock.demo.model.Event
+import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -20,7 +21,8 @@ i want to create events and users and invite users to events so that i have a be
 class EventServiceTest extends Specification {
     @Autowired
     EventService eventService;
-
+    @Autowired
+    UserService userService;
     def setup(){
     }
     def "should create event"(){
@@ -54,5 +56,19 @@ class EventServiceTest extends Specification {
         persisted.id ==2
         persisted.title == "!!! (Chk Chk Chk)"
         persisted.price == 20.5f
+    }
+    def "should invite users to events"(){
+        def eventDate = new DateTime(2019, 12, 4, 20, 0)
+        given: "an event is created"
+        Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
+        and:"i have some users"
+        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        when: "i invite users to events"
+        eventService.invite(event, user)
+        Event persisted = eventService.getById(event.id)
+        then: "the event should show who i have invited"
+       persisted.invited.size() == 1
+        persisted.invited[0].name =="ronald"
+
     }
 }

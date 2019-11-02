@@ -2,6 +2,7 @@ package com.roha.example.spock.demo.service
 
 import com.roha.example.spock.demo.dao.EventRepository
 import com.roha.example.spock.demo.model.Event
+import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -39,5 +40,8 @@ class EventService {
         return eventRepository.findById(id).orElse(null)
     }
 
+    def invite(Event event, User user) {
+        event.invite(user)
 
+    }
 }
