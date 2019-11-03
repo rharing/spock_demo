@@ -4,6 +4,7 @@ import com.roha.example.spock.demo.dao.EventRepository
 import com.roha.example.spock.demo.model.Event
 import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
+import org.joda.time.Days
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +19,15 @@ class EventService {
     @Autowired
     CommunicationService communicationService;
     DateTimeFormatter fmt = DateTimeFormat.forPattern("E d MMMM, yyyy");
-
+    @Autowired
+    DiscountCalculator discountCalculator
     public Event createEvent(String title, Date when, boolean indiestad, String description) {
         Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad)
+        eventRepository.save(event)
+
+    }
+    public Event createEvent(String title, Date when, boolean indiestad, String description, float price) {
+        Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad,price: price)
         eventRepository.save(event)
 
     }
@@ -50,5 +57,10 @@ class EventService {
         event.invite(user)
 
         communicationService.sendInvite(user.email, "ga je mee naar $event.title","${event.description} speelt op ${fmt.print(new DateTime(event.eventDate))}")
+    }
+
+    def buyTicket(Event event, User user, DateTime buyingdate = new DateTime()) {
+        def price = discountCalculator.calculatePrice(event, buyingdate)
+        communicationService.sendInvite(user.email, "ticket binnen voor $event.title","je krijgt nog een tikkie na volgende deploy voor ${price}")
     }
 }
