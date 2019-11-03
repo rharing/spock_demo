@@ -10,10 +10,10 @@ class DiscountCalculator {
     float calculatePrice(Event event, DateTime buyingDate) {
         int daysinAdvance = Math.abs(Days.daysBetween(new DateTime(event.eventDate),buyingDate).getDays())
         float price = event.price
-        if (daysinAdvance>60){
+        if (daysinAdvance>=60){
             price = price - (0.1*price)
         }
-        else if (daysinAdvance>30){
+        else if (daysinAdvance>=30){
             price = price - (0.05*price)
         }
         price

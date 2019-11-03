@@ -12,6 +12,7 @@ import spock.lang.Narrative
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Title
+import spock.lang.Unroll
 
 @Narrative("""
 If cards are bought more then 30 days in advance the buyer will get a 5 % discount and
@@ -35,25 +36,17 @@ class DiscountCalculatorTest extends Specification {
         event = eventService.createEvent("toutpartout", this.eventDate.toDate(), true, "Whispering sons en meer", 20.0f)
 
     }
-
-    def "calculate discounts ticket is bought less then 30 days in advance"() {
-        when: "calculate the discount"
-        def price = discountCalculator.calculatePrice(event, eventDate.minusDays(25))
-        then:"no discount for you"
-        price == 20.0f
-    }
-
-    def "calculate discounts ticket is bought more then 30 days in advance but less then 60"() {
-        when: "calculate the discount"
-        def price = discountCalculator.calculatePrice(event, eventDate.minusDays(31))
-        then:"a 5percent discount should be applied"
-        price == 19.0f
-    }
-
-    def "calculate discounts ticket is bought more then 60 days in advance"() {
-        when: "calculate the discount"
-        def price = discountCalculator.calculatePrice(event, eventDate.minusDays(61))
-        then:"a 10 percent discount should be applied"
-        price == 18.0f
+@Unroll
+    def "calculate discounts ticket"() {
+        expect: "calculate the discount"
+        price == discountCalculator.calculatePrice(event, eventDate.minusDays(days))
+        where:
+        price| days
+        20.0f| 29
+        19.0f|30
+        19.0f|31
+        19.0f|59
+        18.0f|60
+        18.0f|61
     }
 }
