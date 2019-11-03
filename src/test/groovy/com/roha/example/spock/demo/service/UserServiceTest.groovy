@@ -37,4 +37,12 @@ class UserServiceTest extends Specification {
         then:"the user should be as defined"
         user == persisted
     }
+    def "showing fails to locate your errors easily"(){
+        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        when:"an user is retrieved by its id"
+        User persisted =userService.findById(user.id)
+        then:"showing the bad compare"
+        persisted == new User(id: persisted.id, name:"ronald", email:"email@ronaldharing.nl", password: "Pass")
+
+    }
 }
