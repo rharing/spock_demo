@@ -43,9 +43,9 @@ class UserServiceTest extends Specification {
         persisted = userService.findByEmail("email@ronaldharing.com")
         then:"the user should be as defined"
         user == persisted
-        when:"a persisted user is compared to a new user"
-        then:"the error should show us that they are not the same"
-        persisted == new User(id:persisted.id, name:"Ronald", email:"email@ronaldharing.com", password: "Password")
+//        when:"a persisted user is compared to a new user"
+//        then:"the error should show us that they are not the same"
+//        persisted == new User(id:persisted.id, name:"Ronald", email:"email@ronaldharing.com", password: "password")
         when:"this user is deleted"
         userService.delete(persisted.id)
         persisted = userService.findByEmail("email@ronaldharing.com")
