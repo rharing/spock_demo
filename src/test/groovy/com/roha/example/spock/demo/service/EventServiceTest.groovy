@@ -1,5 +1,6 @@
 package com.roha.example.spock.demo.service
 
+import com.roha.example.spock.demo.dao.EventRepository
 import com.roha.example.spock.demo.model.Event
 import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 import spock.lang.Issue
 import spock.lang.Narrative
 import spock.lang.Specification
+import spock.lang.Stepwise
 import spock.lang.Title
 
 @Narrative("""
@@ -20,6 +22,7 @@ i want to create events and users and invite users to events so that i have a be
 @Issue("EVE-001")
 @SpringBootTest
 @Transactional
+@Stepwise
 class EventServiceTest extends Specification {
     @Autowired
     EventService eventService;
@@ -92,4 +95,15 @@ class EventServiceTest extends Specification {
             assert it[0].text == "Whispering sons en meer speelt op wo 4 december, 2019"
         }
     }
+    def "using mocks to retrieve the events"(){
+        given: "mocking eventrepository as the retrieval depends on time comsuming stuff"
+        EventRepository eventRepository = Mock(EventRepository)
+        eventService.eventRepository = eventRepository
+        eventRepository.findAll()>> [ new Event(title: "first"), new Event(title: "second")]
+        when:
+        def events = eventService.listEvents()
+        then:
+        events.size() == 2
+    }
+
 }
