@@ -13,7 +13,7 @@ i want to create events and users and invite users to events so that i have a be
 @Title("crudding events")
 @Issue("EVE-001")
 class EventServiceTest extends Specification {
-    EventService eventService;
+    EventService eventService
 
     def setup(){
         eventService = new EventService()
@@ -44,7 +44,7 @@ class EventServiceTest extends Specification {
         and: "but the day events for the specific date should still be one"
         dayevents.size()==1
         when: "retrieving event byId"
-        Event persisted =eventService.getById(event.id);
+        Event persisted =eventService.getById(event.id)
         then: "event should have fields as defined"
         persisted.id ==2
         persisted.title == "!!! (Chk Chk Chk)"
