@@ -53,4 +53,15 @@ class UserServiceTest extends Specification {
         persisted == null
 
     }
+    def "loading all users"(){
+        given:"a number of users"
+        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        user = userService.createUser("tycho","tycho@easywriter.nl","password")
+        when: "all users are retrieved"
+        def users = userService.allUsersButMe user
+        then:"we should have all users but the loggedin user"
+        users.size() == 1
+        users.get(0).email == "email@ronaldharing.com"
+
+    }
 }

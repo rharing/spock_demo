@@ -26,4 +26,8 @@ class UserService {
     def delete(long id) {
         userRepository.deleteById(id)
     }
+
+    def allUsersButMe(User user) {
+        userRepository.allUsersButMe(user.email)
+    }
 }

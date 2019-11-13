@@ -75,6 +75,17 @@ class EventServiceTest extends Specification {
         then: "the event should show who i have invited"
        persisted.invited.size() == 1
         persisted.invited[0].name =="ronald"
+    }
+
+    def"invitedusers should inform that they are going"(){
+        def eventDate = new DateTime(2019, 12, 4, 20, 0)
+        given: "an event is created"
+        Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
+        and:"i have some users"
+        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        and: "i invite users to events"
+        eventService.invite(event, user)
+        then
 
     }
     def "should send invites to users"(){
