@@ -16,6 +16,6 @@ jobs:
       - name: Run a multi-line script
          run: |
               pwd,
-              ls
+              ls.
       - name: Build with Maven
         run: mvn -B package --file pom.xml
