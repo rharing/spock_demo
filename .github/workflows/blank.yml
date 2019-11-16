@@ -9,5 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: Run a one-line script
-      run: mvn test
+  - name: Run a multi-line script
+      run: |
+pwd,
+ls,
+mvn test
