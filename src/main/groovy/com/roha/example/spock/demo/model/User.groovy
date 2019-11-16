@@ -1,22 +1,24 @@
 package com.roha.example.spock.demo.model
 
+import javax.persistence.CascadeType
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.ManyToMany
+import javax.persistence.OneToMany
 
 @Entity
 class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     Long id
     private String name
     private String email
     private String password
     private String phone
+    @OneToMany( mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
+    Set<Invitee> invitedFor = new HashSet<>()
 
-    @ManyToMany(mappedBy = "invited")
-    Set<Event> invitedfor = new HashSet<>()
     @Override
     public String toString() {
         return "User{" +

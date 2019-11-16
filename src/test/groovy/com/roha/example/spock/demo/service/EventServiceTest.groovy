@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.test.annotation.Rollback
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Issue
 import spock.lang.Narrative
@@ -15,19 +18,25 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.lang.Title
 
+import javax.persistence.EntityManager
+
 @Narrative("""
 i want to create events and users and invite users to events so that i have a better recollection who is coming with me
 """)
 @Title("crudding events")
 @Issue("EVE-001")
 @SpringBootTest
-@Transactional
+@Transactional()
 @Stepwise
+@ActiveProfiles("test")
+@TestPropertySource(locations="classpath:application_test.properties")
 class EventServiceTest extends Specification {
     @Autowired
     EventService eventService;
     @Autowired
     UserService userService;
+    @Autowired
+    EntityManager entityManager
     def setup(){
     }
     def "should create event"(){
@@ -63,6 +72,7 @@ class EventServiceTest extends Specification {
         persisted.title == "!!! (Chk Chk Chk)"
         persisted.price == 20.5f
     }
+
     def "should invite users to events"(){
         def eventDate = new DateTime(2019, 12, 4, 20, 0)
         given: "an event is created"
@@ -71,10 +81,12 @@ class EventServiceTest extends Specification {
         User user = userService.createUser("ronald","email@ronaldharing.com","password")
         when: "i invite users to events"
         eventService.invite(event, user)
+        entityManager.flush()
+        entityManager.clear()
         Event persisted = eventService.getById(event.id)
         then: "the event should show who i have invited"
        persisted.invited.size() == 1
-        persisted.invited[0].name =="ronald"
+        persisted.invited[0].user.name =="ronald"
     }
 
     def"invitedusers should inform that they are going"(){
@@ -85,7 +97,12 @@ class EventServiceTest extends Specification {
         User user = userService.createUser("ronald","email@ronaldharing.com","password")
         and: "i invite users to events"
         eventService.invite(event, user)
-        then
+        when: "the users says ok"
+        eventService.yesIWilljoin(event.id, user.id)
+        entityManager.flush()
+        event = eventService.getById(event.id)
+        then:
+        event.invited[0].accepted
 
     }
     def "should send invites to users"(){
@@ -106,15 +123,4 @@ class EventServiceTest extends Specification {
             assert it[0].text == "Whispering sons en meer speelt op wo 4 december, 2019"
         }
     }
-    def "using mocks to retrieve the events"(){
-        given: "mocking eventrepository as the retrieval depends on time comsuming stuff"
-        EventRepository eventRepository = Mock(EventRepository)
-        eventService.eventRepository = eventRepository
-        eventRepository.findAll()>> [ new Event(title: "first"), new Event(title: "second")]
-        when:
-        def events = eventService.listEvents()
-        then:
-        events.size() == 2
-    }
-
 }

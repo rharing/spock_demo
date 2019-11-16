@@ -43,12 +43,22 @@ class EventService {
 
 
     public Event getById(Long id) {
-        return eventRepository.findById(id).orElse(null)
+        return eventRepository.findOne(id)
     }
 
     def invite(Event event, User user) {
         event.invite(user)
 
-        communicationService.sendInvite(user.email, "ga je mee naar $event.title","${event.description} speelt op ${fmt.print(new DateTime(event.eventDate))}")
+        communicationService.sendInvite(event, user)
+    }
+
+    def yesIWilljoin(long eventId, long userId) {
+        def event = getById(eventId)
+        event.invited.every({
+            if(it.user.id == userId){
+                it.accepted =true
+                eventRepository.save(it.event)
+            }
+        })
     }
 }

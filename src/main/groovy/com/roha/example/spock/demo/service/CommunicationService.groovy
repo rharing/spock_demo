@@ -1,5 +1,7 @@
 package com.roha.example.spock.demo.service
 
+import com.roha.example.spock.demo.model.Event
+import com.roha.example.spock.demo.model.User
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.MailException
 import org.springframework.mail.SimpleMailMessage
@@ -23,8 +25,14 @@ class CommunicationService {
     @Value("\${mail.port:25}")
     int port
     JavaMailSender mailSender
-    public void sendInvite(String to, String subject, String body){
-        mailSender.send(new SimpleMailMessage(from:from,to:to,subject:subject,text: body))
+    MessageCreator messageCreator
+
+    CommunicationService(MessageCreator messageCreator) {
+        this.messageCreator = messageCreator
+    }
+
+    public void sendInvite(Event event, User user){
+        mailSender.send(messageCreator.createInvite(event,user))
     }
     @PostConstruct
     public void afterPropertiesSet(){

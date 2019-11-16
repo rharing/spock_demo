@@ -16,7 +16,7 @@ class UserService {
     }
 
     User findById(long id) {
-        userRepository.findById(id).orElse(null)
+        userRepository.findOne(id)
     }
 
     User findByEmail(String email) {
@@ -24,7 +24,7 @@ class UserService {
     }
 
     def delete(long id) {
-        userRepository.deleteById(id)
+        userRepository.delete(id)
     }
 
     def allUsersButMe(User user) {
