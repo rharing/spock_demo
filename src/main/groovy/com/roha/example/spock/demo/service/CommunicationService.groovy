@@ -1,7 +1,11 @@
 package com.roha.example.spock.demo.service
 
 import com.roha.example.spock.demo.model.Event
+import com.roha.example.spock.demo.model.Invitee
 import com.roha.example.spock.demo.model.User
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.MailException
 import org.springframework.mail.SimpleMailMessage
@@ -26,13 +30,15 @@ class CommunicationService {
     int port
     JavaMailSender mailSender
     MessageCreator messageCreator
+    DateTimeFormatter fmt = DateTimeFormat.forPattern("E d MMMM, yyyy");
 
-    CommunicationService(MessageCreator messageCreator) {
+
+    CommunicationService(@Autowired MessageCreator messageCreator) {
         this.messageCreator = messageCreator
     }
 
-    public void sendInvite(Event event, User user){
-        mailSender.send(messageCreator.createInvite(event,user))
+    public void sendInvite(Invitee invitee){
+        mailSender.send(messageCreator.createInvite(invitee, fmt))
     }
     @PostConstruct
     public void afterPropertiesSet(){

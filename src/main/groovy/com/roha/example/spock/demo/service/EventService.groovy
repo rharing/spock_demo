@@ -2,6 +2,7 @@ package com.roha.example.spock.demo.service
 
 import com.roha.example.spock.demo.dao.EventRepository
 import com.roha.example.spock.demo.model.Event
+import com.roha.example.spock.demo.model.Invitee
 import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -17,7 +18,6 @@ class EventService {
     EventRepository eventRepository
     @Autowired
     CommunicationService communicationService;
-    DateTimeFormatter fmt = DateTimeFormat.forPattern("E d MMMM, yyyy");
 
     public Event createEvent(String title, Date when, boolean indiestad, String description) {
         Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad)
@@ -47,9 +47,10 @@ class EventService {
     }
 
     def invite(Event event, User user) {
-        event.invite(user)
+        Invitee invitee = event.invite(user)
 
-        communicationService.sendInvite(event, user)
+
+        communicationService.sendInvite(invitee)
     }
 
     def yesIWilljoin(long eventId, long userId) {

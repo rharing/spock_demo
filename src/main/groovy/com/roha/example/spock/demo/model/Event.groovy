@@ -23,9 +23,10 @@ class Event {
     @OneToMany( mappedBy = "event", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     Set<Invitee> invited = new HashSet<>()
 
-    def invite(User user) {
+    public Invitee invite(User user) {
         def invitee = new Invitee(user: user, event:this)
         user.invitedFor.add(invitee)
         invited.add(invitee)
+        invitee
     }
 }
