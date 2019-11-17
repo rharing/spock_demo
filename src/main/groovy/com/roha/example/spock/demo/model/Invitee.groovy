@@ -14,9 +14,9 @@ class Invitee {
     Long id
 
     @ManyToOne
-    Event event
+    private Event event
     @ManyToOne
-    User user
+    private User user
     private boolean accepted
     private boolean paid
 

@@ -10,6 +10,8 @@ import org.joda.time.format.DateTimeFormatter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import javax.persistence.EntityManager
+
 
 @Service
 class EventService {
@@ -18,7 +20,8 @@ class EventService {
     EventRepository eventRepository
     @Autowired
     CommunicationService communicationService;
-
+    @Autowired
+    EntityManager entityManager
     public Event createEvent(String title, Date when, boolean indiestad, String description) {
         Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad)
         eventRepository.save(event)
@@ -48,7 +51,7 @@ class EventService {
 
     def invite(Event event, User user) {
         Invitee invitee = event.invite(user)
-
+        entityManager.flush()
 
         communicationService.sendInvite(invitee)
     }

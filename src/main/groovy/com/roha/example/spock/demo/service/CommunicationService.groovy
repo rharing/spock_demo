@@ -26,6 +26,8 @@ class CommunicationService {
     String password
     @Value("\${mail.host:}")
     String host
+    @Value("\${baseUrl:http://meemettycho/invite}")
+    String baseurl
     @Value("\${mail.port:25}")
     int port
     JavaMailSender mailSender
@@ -38,7 +40,9 @@ class CommunicationService {
     }
 
     public void sendInvite(Invitee invitee){
-        mailSender.send(messageCreator.createInvite(invitee, fmt))
+        def message = mailSender.createMimeMessage()
+        messageCreator.createInvite(invitee, fmt, message,baseurl)
+        mailSender.send(message)
     }
     @PostConstruct
     public void afterPropertiesSet(){
