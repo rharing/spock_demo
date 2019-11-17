@@ -19,6 +19,7 @@ class Invitee {
     private User user
     private boolean accepted
     private boolean paid
+    private boolean responded
 
     Long getId() {
         return id

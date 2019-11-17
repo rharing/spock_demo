@@ -61,6 +61,17 @@ class EventService {
         event.invited.every({
             if(it.user.id == userId){
                 it.accepted =true
+                it.responded =true
+                eventRepository.save(it.event)
+            }
+        })
+    }
+    def NopeIwillPass(long eventId, long userId) {
+        def event = getById(eventId)
+        event.invited.every({
+            if(it.user.id == userId){
+                it.accepted =false
+                it.responded =true
                 eventRepository.save(it.event)
             }
         })

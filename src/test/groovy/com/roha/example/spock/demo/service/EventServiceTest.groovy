@@ -145,6 +145,24 @@ class EventServiceTest extends Specification {
         event = eventService.getById(event.id)
         then:
         event.invited[0].accepted
+        event.invited[0].responded
+
+    }
+    def"invitedusers should inform that they are not going"(){
+        def eventDate = new DateTime(2019, 12, 4, 20, 0)
+        given: "an event is created"
+        Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
+        and:"i have some users"
+        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        and: "i invite users to events"
+        eventService.invite(event, user)
+        when: "the users says ok"
+        eventService.NopeIwillPass(event.id, user.id)
+        entityManager.flush()
+        event = eventService.getById(event.id)
+        then:
+        !event.invited[0].accepted
+        event.invited[0].responded
 
     }
     def "should send invites to users"(){
