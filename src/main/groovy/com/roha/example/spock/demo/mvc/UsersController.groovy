@@ -4,6 +4,7 @@ import com.roha.example.spock.demo.service.EventService
 import com.roha.example.spock.demo.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 @Controller
@@ -17,8 +18,14 @@ class UsersController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<UserDTO> events(){
-        userService.all().map{
+        userService.all().collect{
             new UserDTO(it)
+        }
+    }
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    public createUser(@RequestBody UserDTO userDTO) {
+        if(userDTO.id == null){
+            userService.createUser(userDTO)
         }
     }
 

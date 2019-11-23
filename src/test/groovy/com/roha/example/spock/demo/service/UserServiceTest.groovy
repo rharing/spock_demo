@@ -2,6 +2,7 @@ package com.roha.example.spock.demo.service
 
 import com.roha.example.spock.demo.model.Event
 import com.roha.example.spock.demo.model.User
+import com.roha.example.spock.demo.mvc.UserDTO
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -43,6 +44,15 @@ class UserServiceTest extends Specification {
         persisted = userService.findByEmail("email@ronaldharing.com")
         then:"the user should be as defined"
         user == persisted
+        when:"an existing user is updated as defined by id"
+        UserDTO userdto = new UserDTO(persisted)
+        userdto.name="updated"
+        user = userService.createUser(userdto)
+        then: "the user should be updated"
+        userdto.name=="updated"
+        userdto.email=="email@ronaldharing.com"
+        userdto.id==persisted.id
+
 //        when:"a persisted user is compared to a new user"
 //        then:"the error should show us that they are not the same"
 //        persisted == new User(id:persisted.id, name:"Ronald", email:"email@ronaldharing.com", password: "password")
@@ -51,6 +61,7 @@ class UserServiceTest extends Specification {
         persisted = userService.findByEmail("email@ronaldharing.com")
         then:"the user is not found when retrieving him/her"
         persisted == null
+
 
     }
     def "loading all users"(){

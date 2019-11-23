@@ -1,5 +1,7 @@
 package com.roha.example.spock.demo.model
 
+import com.roha.example.spock.demo.mvc.UserDTO
+
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -11,13 +13,14 @@ import javax.persistence.OneToMany
 class User {
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
-    Long id
+    private Long id
     private String name
     private String email
     private String password
     private String phone
     @OneToMany( mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     Set<Invitee> invitedFor = new HashSet<>()
+
 
     @Override
     public String toString() {
