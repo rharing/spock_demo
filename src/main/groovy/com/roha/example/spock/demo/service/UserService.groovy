@@ -30,4 +30,8 @@ class UserService {
     def allUsersButMe(User user) {
         userRepository.allUsersButMe(user.email)
     }
+
+    List<User> all() {
+        userRepository.findAll()
+    }
 }

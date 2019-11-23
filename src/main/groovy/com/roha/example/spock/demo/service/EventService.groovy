@@ -22,6 +22,7 @@ class EventService {
     CommunicationService communicationService;
     @Autowired
     EntityManager entityManager
+
     public Event createEvent(String title, Date when, boolean indiestad, String description) {
         Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad)
         eventRepository.save(event)
