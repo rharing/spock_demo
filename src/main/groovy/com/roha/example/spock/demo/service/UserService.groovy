@@ -17,12 +17,13 @@ class UserService {
     }
     User createUser(UserDTO userDTO) {
         User existingUser =findByEmail(userDTO.email)
+        User user
         if(existingUser == null) {
-            User user = userRepository.save(userDTO.asUser())
+             user = userRepository.save(userDTO.asUser())
         }
         else if(existingUser.id == userDTO.id){
             //update exitinguser
-            User user = userRepository.save(userDTO.asUser())
+            user = userRepository.save(userDTO.asUser())
         }
         user
     }

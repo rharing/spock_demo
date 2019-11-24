@@ -16,6 +16,9 @@ class UserDTO {
     @NotEmpty
     private String phone
 
+    UserDTO() {
+    }
+
     UserDTO(User user) {
         this.id = user.id
         this.name = user.name
@@ -32,5 +35,45 @@ class UserDTO {
         user.password = this.password
         user.phone = this.phone
         user
+    }
+
+    Long getId() {
+        return id
+    }
+
+    void setId(Long id) {
+        this.id = id
+    }
+
+    String getName() {
+        return name
+    }
+
+    void setName(String name) {
+        this.name = name
+    }
+
+    String getEmail() {
+        return email
+    }
+
+    void setEmail(String email) {
+        this.email = email
+    }
+
+    String getPassword() {
+        return password
+    }
+
+    void setPassword(String password) {
+        this.password = password
+    }
+
+    String getPhone() {
+        return phone
+    }
+
+    void setPhone(String phone) {
+        this.phone = phone
     }
 }

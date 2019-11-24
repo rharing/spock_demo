@@ -1,9 +1,13 @@
 package com.roha.example.spock.demo.mvc
 
+import com.roha.example.spock.demo.model.User
 import com.roha.example.spock.demo.service.EventService
 import com.roha.example.spock.demo.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -22,11 +26,13 @@ class UsersController {
             new UserDTO(it)
         }
     }
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public createUser(@RequestBody UserDTO userDTO) {
+    @PostMapping(value = "/user")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        User user
         if(userDTO.id == null){
-            userService.createUser(userDTO)
+            user = userService.createUser(userDTO)
         }
+        return new ResponseEntity<UserDTO>(new UserDTO(user), HttpStatus.CREATED)
     }
 
 }
