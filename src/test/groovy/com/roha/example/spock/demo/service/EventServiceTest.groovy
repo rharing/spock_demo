@@ -3,23 +3,16 @@ package com.roha.example.spock.demo.service
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
 import com.icegreen.greenmail.util.ServerSetup
-import com.roha.example.spock.demo.dao.EventRepository
 import com.roha.example.spock.demo.model.Event
 import com.roha.example.spock.demo.model.User
 import org.joda.time.DateTime
-import org.junit.After
-import org.junit.Before
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
-import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSenderImpl
-import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
-import spock.lang.Ignore
 import spock.lang.Issue
 import spock.lang.Narrative
 import spock.lang.Specification
@@ -27,7 +20,6 @@ import spock.lang.Stepwise
 import spock.lang.Title
 
 import javax.mail.Message
-import javax.mail.internet.MimeMessage
 import javax.persistence.EntityManager
 
 @Narrative("""
@@ -121,7 +113,7 @@ class EventServiceTest extends Specification {
         given: "an event is created"
         Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
         and:"i have some users"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         when: "i invite users to events"
         eventService.invite(event, user)
         entityManager.flush()
@@ -136,7 +128,7 @@ class EventServiceTest extends Specification {
         given: "an event is created"
         Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
         and:"i have some users"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         and: "i invite users to events"
         eventService.invite(event, user)
         when: "the users says ok"
@@ -153,7 +145,7 @@ class EventServiceTest extends Specification {
         given: "an event is created"
         Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
         and:"i have some users"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         and: "i invite users to events"
         eventService.invite(event, user)
         when: "the users says ok"
@@ -171,7 +163,7 @@ class EventServiceTest extends Specification {
         given: "an event is created"
         Event event = eventService.createEvent("toutpartout", eventDate.toDate(), true, "Whispering sons en meer")
         and:"i have some users"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         when: "i invite users to events"
         eventService.invite(event, user)
         Event persisted = eventService.getById(event.id)

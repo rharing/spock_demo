@@ -1,11 +1,9 @@
 package com.roha.example.spock.demo.service
 
-import com.roha.example.spock.demo.model.Event
+
 import com.roha.example.spock.demo.model.User
 import com.roha.example.spock.demo.mvc.UserDTO
-import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Issue
@@ -29,13 +27,13 @@ class UserServiceTest extends Specification {
     }
     def "should save users"(){
         when: "an user is created"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         then:"the id of the user should be updated"
         user.id != null
     }
     def "complete crud"(){
         given: "a user is created"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         when:"an user is retrieved by its id"
         User persisted = userService.findById(user.id)
         then:"the user should be as defined"
@@ -47,7 +45,7 @@ class UserServiceTest extends Specification {
         when:"an existing user is updated as defined by id"
         UserDTO userdto = new UserDTO(persisted)
         userdto.name="updated"
-        user = userService.createUser(userdto)
+        user = userService.saveUser(userdto)
         then: "the user should be updated"
         userdto.name=="updated"
         userdto.email=="email@ronaldharing.com"
@@ -61,13 +59,22 @@ class UserServiceTest extends Specification {
         persisted = userService.findByEmail("email@ronaldharing.com")
         then:"the user is not found when retrieving him/her"
         persisted == null
+    }
 
-
+    def "should not update existing user to another user with same email"(){
+        given:"two existing users"
+        User usera = userService.saveUser("ronalda","a@a.nl","password")
+        User userb = userService.saveUser("ronaldb","b@b.nl","password")
+        when: "usera changes email to userb"
+        usera.email = "b@b.nl"
+        User persisted = userService.saveUser(new UserDTO(usera))
+then:
+persisted == null
     }
     def "loading all users"(){
         given:"a number of users"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
-        user = userService.createUser("tycho","tycho@easywriter.nl","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
+        user = userService.saveUser("tycho","tycho@easywriter.nl","password")
         when: "all users are retrieved"
         def users = userService.allUsersButMe user
         then:"we should have all users but the loggedin user"

@@ -11,11 +11,11 @@ class UserService {
     @Autowired
     UserRepository userRepository
 
-    User createUser(String name, String email, String password) {
+    User saveUser(String name, String email, String password) {
         User user = new User(name: name, email: email, password: password)
         userRepository.save(user)
     }
-    User createUser(UserDTO userDTO) {
+    User saveUser(UserDTO userDTO) {
         User existingUser =findByEmail(userDTO.email)
         User user
         if(existingUser == null) {
@@ -25,9 +25,11 @@ class UserService {
             //update exitinguser
             user = userRepository.save(userDTO.asUser())
         }
+        else{
+            // an user with this email already exists
+        }
         user
     }
-
     User findById(long id) {
         userRepository.findOne(id)
     }

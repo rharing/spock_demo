@@ -32,7 +32,8 @@ class UsersControllerTest extends Specification {
     @Autowired
     EntityManager entityManager
 
-    MockMvc mockMvc;
+    MockMvc mockMvc
+    private ObjectMapper objectMapper
 
     def setup() {
         userService = new UserService()
@@ -41,12 +42,14 @@ class UsersControllerTest extends Specification {
 
         mockMvc = standaloneSetup(usersController)
                 .build();
+        objectMapper = new ObjectMapper()
+        this.objectMapper.setVisibility(PropertyAccessor.FIELD, ANY);
+
     }
-    def "should crud users"(){
+
+    def "should crud users"() {
         given: "an user"
-        ObjectMapper objectMapper = new ObjectMapper()
-        objectMapper.setVisibility(PropertyAccessor.FIELD, ANY);
-        UserDTO userDTO = new UserDTO(new User( name:"name", email:"a@a.nl", password:"password"))
+        UserDTO userDTO = new UserDTO(new User(name: "name", email: "a@a.nl", password: "password"))
         String json = objectMapper.writeValueAsString(userDTO)
         when:
         MockHttpServletResponse response = mockMvc.perform(post("/user")
@@ -57,11 +60,46 @@ class UsersControllerTest extends Specification {
                 .andReturn().response
         UserDTO result = objectMapper.readValue(response.contentAsString, UserDTO.class)
         then:
-        response.status ==201
-result.id != null;
+        response.status == 201
+        result.id != null;
         result.name == "name"
         result.email == "a@a.nl"
+        when: "requesting a specificUser"
+        response = mockMvc.perform(get("/user/" + result.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json)
+                .characterEncoding("utf-8"))
+                .andReturn().response
+        UserDTO persistedUser = objectMapper.readValue(response.contentAsString, UserDTO.class)
+        then:
+        persistedUser != null
+        persistedUser.email == "a@a.nl"
+//        when:"updating an existinguser"
 
+        when: "requesting all users"
+        response = mockMvc.perform(get("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8"))
+                .andReturn().response
+        then:
+        response.contentAsString == "[{\"id\":${result.id},\"name\":\"name\",\"email\":\"a@a.nl\",\"password\":\"password\",\"phone\":null}]"
+        response.status == 200
+    }
+
+    def "checking validations"() {
+        UserDTO userDTO = new UserDTO(new User(email: "a@a.nl", password: "password"))
+        String json = objectMapper.writeValueAsString(userDTO)
+        when:
+        MockHttpServletResponse response = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json)
+                .characterEncoding("utf-8"))
+                .andReturn().response
+        then:
+        response.status == 400
+        response.contentAsString == """{"fieldErrors":[{"codes":["NotEmpty.userDTO.name","NotEmpty.name","NotEmpty.java.lang.String","NotEmpty"],"arguments":[{"codes":["userDTO.name","name"],"arguments":null,"defaultMessage":"name","code":"name"}],"defaultMessage":"may not be empty","objectName":"userDTO","field":"name","rejectedValue":null,"bindingFailure":false,"code":"NotEmpty"},{"codes":["NotEmpty.userDTO.phone","NotEmpty.phone","NotEmpty.java.lang.String","NotEmpty"],"arguments":[{"codes":["userDTO.phone","phone"],"arguments":null,"defaultMessage":"phone","code":"phone"}],"defaultMessage":"may not be empty","objectName":"userDTO","field":"phone","rejectedValue":null,"bindingFailure":false,"code":"NotEmpty"}]}"""
     }
 
 }
