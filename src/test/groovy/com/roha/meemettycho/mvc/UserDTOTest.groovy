@@ -1,9 +1,11 @@
 package com.roha.meemettycho.mvc
 
+import com.roha.meemettycho.UnitTest
 import com.roha.model.User
 import com.roha.mvc.UserDTO
 import spock.lang.Specification
 
+@Category(UnitTest.class)
 class UserDTOTest extends Specification {
 
     def "should set properties from user"(){
@@ -12,7 +14,7 @@ class UserDTOTest extends Specification {
         when: 'dto is created from an user'
         def userdto = new UserDTO(user)
         then: "the fields should be copies from user"
-        userdto.id == user.id
+        userdto.id != user.id
         userdto.name == user.name
         userdto.email == user.email
         userdto.password == user.password

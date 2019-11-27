@@ -20,7 +20,7 @@ i want store users
 @Transactional
 class UserServiceTest extends Specification {
     @Autowired
-    UserService userService;
+    UserService userService
 
     def setup(){
 

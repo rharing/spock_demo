@@ -1,13 +1,13 @@
 package com.roha.meemettycho.mvc
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect
+
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.roha.example.spock.demo.dao.EventRepository
-import com.roha.example.spock.demo.dao.UserRepository
-import com.roha.example.spock.demo.model.User
-import com.roha.example.spock.demo.service.EventService
-import com.roha.example.spock.demo.service.UserService
+import com.roha.dao.UserRepository
+import com.roha.model.User
+import com.roha.mvc.UserDTO
+import com.roha.mvc.UsersController
+import com.roha.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.http.MediaType
@@ -18,8 +18,8 @@ import spock.lang.Specification
 import javax.persistence.EntityManager
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
 @DataJpaTest
@@ -40,8 +40,7 @@ class UsersControllerTest extends Specification {
         userService.userRepository = userRepository
         usersController = new UsersController(userService)
 
-        mockMvc = standaloneSetup(usersController)
-                .build();
+        mockMvc = standaloneSetup(usersController).build()
         objectMapper = new ObjectMapper()
         this.objectMapper.setVisibility(PropertyAccessor.FIELD, ANY);
 
