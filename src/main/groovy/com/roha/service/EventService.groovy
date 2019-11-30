@@ -1,7 +1,7 @@
-package com.roha.example.spock.demo.service
+package com.roha.service
 
-import com.roha.example.spock.demo.dao.EventRepository
-import com.roha.example.spock.demo.model.Event
+import com.roha.dao.EventRepository
+import com.roha.model.Event
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

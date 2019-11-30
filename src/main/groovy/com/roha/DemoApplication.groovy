@@ -1,4 +1,4 @@
-package com.roha.example.spock.demo
+package com.roha
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication

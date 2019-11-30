@@ -1,6 +1,5 @@
-package com.roha.example.spock.demo.model
+package com.roha.model
 
-import org.joda.time.DateTime
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

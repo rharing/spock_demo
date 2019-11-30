@@ -1,4 +1,4 @@
-package com.roha.example.spock.demo.model
+package com.roha.model
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

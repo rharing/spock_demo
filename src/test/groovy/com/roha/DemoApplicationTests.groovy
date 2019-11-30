@@ -1,4 +1,4 @@
-package com.roha.example.spock.demo
+package com.roha
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

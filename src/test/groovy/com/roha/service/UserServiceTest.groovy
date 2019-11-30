@@ -1,10 +1,7 @@
-package com.roha.example.spock.demo.service
+package com.roha.service
 
-import com.roha.example.spock.demo.model.Event
-import com.roha.example.spock.demo.model.User
-import org.joda.time.DateTime
+import com.roha.model.User
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Issue
@@ -44,8 +41,10 @@ class UserServiceTest extends Specification {
         then:"the user should be as defined"
         user == persisted
         when:"a persisted user is compared to a new user"
-        then:"the error should show us that they are not the same"
-        persisted == new User(id:persisted.id, name:"Ronald", email:"email@ronaldharing.com", password: "Password")
+        then:"they should have the same properties"
+        persisted.name == "ronald"
+        persisted.email== "email@ronaldharing.com"
+        persisted.password== "password"
         when:"this user is deleted"
         userService.delete(persisted.id)
         persisted = userService.findByEmail("email@ronaldharing.com")

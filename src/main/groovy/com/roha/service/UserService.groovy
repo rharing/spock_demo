@@ -1,7 +1,7 @@
-package com.roha.example.spock.demo.service
+package com.roha.service
 
-import com.roha.example.spock.demo.dao.UserRepository
-import com.roha.example.spock.demo.model.User
+import com.roha.dao.UserRepository
+import com.roha.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

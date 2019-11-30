@@ -1,6 +1,6 @@
-package com.roha.example.spock.demo.dao
+package com.roha.dao
 
-import com.roha.example.spock.demo.model.User
+import com.roha.model.User
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Component
 
