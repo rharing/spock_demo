@@ -32,7 +32,7 @@ class CommunicationService {
     int port
     JavaMailSender mailSender
     MessageCreator messageCreator
-    DateTimeFormatter fmt = DateTimeFormat.forPattern("E d MMMM, yyyy");
+    DateTimeFormatter fmt = DateTimeFormat.forPattern("E d MMMM, yyyy").withLocale(new Locale("nl","nl"))
 
 
     CommunicationService(@Autowired MessageCreator messageCreator) {
