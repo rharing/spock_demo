@@ -25,13 +25,13 @@ class UserServiceTest extends Specification {
     }
     def "should save users"(){
         when: "an user is created"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         then:"the id of the user should be updated"
         user.id != null
     }
     def "complete crud"(){
         given: "a user is created"
-        User user = userService.createUser("ronald","email@ronaldharing.com","password")
+        User user = userService.saveUser("ronald","email@ronaldharing.com","password")
         when:"an user is retrieved by its id"
         User persisted = userService.findById(user.id)
         then:"the user should be as defined"

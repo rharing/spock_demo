@@ -2,15 +2,23 @@ package com.roha.service
 
 import com.roha.dao.EventRepository
 import com.roha.model.Event
+import com.roha.model.Invitee
+import com.roha.model.User
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import javax.persistence.EntityManager
 
 @Service
 class EventService {
 //    EventRepository eventRepository = new EventRepository();
     @Autowired
     EventRepository eventRepository
+    @Autowired
+    CommunicationService communicationService;
+    @Autowired
+    EntityManager entityManager
 
     public Event createEvent(String title, Date when, boolean indiestad, String description) {
         Event event = new Event(title: title, description: description, eventDate: when, indiestad: indiestad)
@@ -36,8 +44,35 @@ class EventService {
 
 
     public Event getById(Long id) {
-        return eventRepository.findById(id).orElse(null)
+        return eventRepository.findById(id).orElseGet(null)
     }
 
+    def invite(Event event, User user) {
+        Invitee invitee = event.invite(user)
+        entityManager.flush()
 
+        communicationService.sendInvite(invitee)
+    }
+
+    def yesIWilljoin(long eventId, long userId) {
+        def event = getById(eventId)
+        event.invited.every({
+            if (it.user.id == userId) {
+                it.accepted = true
+                it.responded = true
+                eventRepository.save(it.event)
+            }
+        })
+    }
+
+    def NopeIwillPass(long eventId, long userId) {
+        def event = getById(eventId)
+        event.invited.every({
+            if (it.user.id == userId) {
+                it.accepted = false
+                it.responded = true
+                eventRepository.save(it.event)
+            }
+        })
+    }
 }
